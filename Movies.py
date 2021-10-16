@@ -21,8 +21,7 @@ def InsertingData():
 
 def Updating():
     Field_Names = ["Movie_Name","release_Date","genre","rating"]
-    Conditioning_Data()
-    Data_Being_Updated = cursor.fetchone()
+    Where_statment = MakingWherePartOfTheStatment()
     print("Which one do you want to update?")
     print(f"1.Movie Name")
     print(f"2.Date Released")
@@ -31,9 +30,25 @@ def Updating():
     Answer = int(input()) - 1 #Avoids index errors
     print("What would you like to change it too? ")
     New_Data = input()
-    cursor.execute(f"UPDATE Movies SET {Field_Names[Answer]} == {New_Data}")
+    print(f"UPDATE Movies SET {Field_Names[Answer]} = {New_Data} {Where_statment}")
+    cursor.execute(f"UPDATE Movies SET {Field_Names[Answer]} = \"{New_Data}\" {Where_statment}")
+    db.commit()
+    print("Data has been updated! ")
 
 def Conditioning_Data():
+    Where_Statment = MakingWherePartOfTheStatment()
+    cursor.execute(f"SELECT * FROM Movies {Where_Statment}")
+    Data = cursor.fetchall()
+    if Data != []:
+        for Record in Data:
+            print(f"1.Movie Name:{Record[0]}")
+            print(f"Date Released:{Record[1]}")
+            print(f"Genre:{Record[2]}")
+            print(f"Rating:{Record[3]}")
+    else:
+        print("There is no data with those conditions!")
+
+def MakingWherePartOfTheStatment():
     Finished = False
     Conditions_Dictionary = {}
     while Finished == False:
@@ -44,7 +59,7 @@ def Conditioning_Data():
         print("4.Rating out of 10")
         Condition_field = int(input()) - 1
         if Condition_field not in Conditions_Dictionary and 0 <= Condition_field <= 3:
-            print("What is the condtion? ")
+            print("What is the condition? ")
             Condition_Value = input()
             Conditions_Dictionary[Condition_field] = Condition_Value
         else:
@@ -53,16 +68,10 @@ def Conditioning_Data():
         Answer = input()
         if Answer.title() == "No":
             Finished = True
-    Where_Statment = MakingWherePartOfTheStatment(Conditions_Dictionary)
-    cursor.execute(f"SELECT * FROM Movies {Where_Statment}")
-    Data = cursor.fetchall()
-    print(Data)
-
-def MakingWherePartOfTheStatment(Conditions_Dict):
     Where_Statment = "WHERE"
     Field_Names = ["Movie_Name","release_Date","genre","rating"]
-    for key in Conditions_Dict:
-        Where_Statment += f" {Field_Names[key]} == \"{Conditions_Dict[key]}\" AND"
+    for key in Conditions_Dictionary:
+        Where_Statment += f" {Field_Names[key]} == \"{Conditions_Dictionary[key]}\" AND"
     Where_Statment = Where_Statment[:len(Where_Statment) - 4]#Gets rid of the AND at the end as if t was kept their then it would cause errors.
     return Where_Statment
 
@@ -76,41 +85,6 @@ def Deciding_Between_Getting_All_Data_Or_Only_Getting_Some():
         Conditioning_Data()
     else:
         print("Pick a valid optoion next time")
-'''   
-def Reading_Data_With_Conditions():
-    print("What do you want to condition with? Movie Name(1),Date Released(2), Genre(3) and rating(4)")
-    Decision = int(input())
-    if Decision == 1:
-        print("What is the movie name? ")
-        Movie_Name = input()
-        cursor.execute(f"SELECT * FROM Movies WHERE Movie_Name == \"{Movie_Name}\"")
-    elif Decision == 2:
-        print("When was it released? ")
-        Release_Date = input()
-        cursor.execute(f"SELECT * FROM Movies WHERE release_Date == \"{Release_Date}\"")
-    elif Decision == 3:
-        print("What type of genre is it? ")
-        Genre = input()
-        cursor.execute(f"SELECT * FROM Movies WHERE genre == \"{Genre}\"")
-    elif Decision == 4:
-        print("What rating was it out of ten?")
-        Rating = int(input())
-        print("Would you like greater than(1),less than(2) or equal too(3)")
-        Rating_Decision = int(input())
-        if Rating_Decision == 1:
-            cursor.execute(f"SELECT * FROM Movies WHERE rating > {Rating}")
-        elif Rating_Decision == 2:
-            cursor.execute(f"SELECT * FROM Movies WHERE rating < {Rating}")
-        elif Rating_Decision == 3:
-            cursor.execute(f"SELECT * FROM Movies WHERE rating == {Rating}")
-        else:
-            print("Actually input a correct valid next time! ")
-        Data = cursor.fetchall()
-        if Data == []:
-            print("There is no data for that movie!")
-        else:
-            for record in Data:
-                print(f"Movie name: {record[0]} Date released: {record[1]} genre: {record[2]} rating: {record[3]}/10")'''
 
 def ReadingAllData():
         cursor.execute(f"SELECT * FROM Movies")
@@ -140,5 +114,5 @@ def Decision():
         Answer = input()
         if Answer.title() == "Yes":
             stop = True
-#
+
 Decision()
