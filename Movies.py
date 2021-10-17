@@ -30,7 +30,6 @@ def Updating():
     Answer = int(input()) - 1 #Avoids index errors
     print("What would you like to change it too? ")
     New_Data = input()
-    print(f"UPDATE Movies SET {Field_Names[Answer]} = {New_Data} {Where_statment}")
     cursor.execute(f"UPDATE Movies SET {Field_Names[Answer]} = \"{New_Data}\" {Where_statment}")
     db.commit()
     print("Data has been updated! ")
@@ -84,13 +83,20 @@ def Deciding_Between_Getting_All_Data_Or_Only_Getting_Some():
     elif Answer == 2:
         Conditioning_Data()
     else:
-        print("Pick a valid optoion next time")
+        print("Pick a valid option next time")
 
 def ReadingAllData():
         cursor.execute(f"SELECT * FROM Movies")
         data = cursor.fetchall()
         for record in data:
-            print(f"Movie name: {record[0]} Date released: {record[1]} genre: {record[2]} rating: {record[3]}/10")
+            print(f"Date released:{record[1]}")
+            print(f"Genre:{record[2]}")
+            print(f"Rating:{record[3]}")
+
+def DeletingData():
+    WhereStatment = MakingWherePartOfTheStatment()
+    cursor.execute(f"DELETE FROM Movies {WhereStatment}")
+    db.commit()
 
 def Decision():
     stop = False
@@ -107,7 +113,7 @@ def Decision():
         elif Decision == 3:
             Updating()
         elif Decision == 4:
-            print(4)
+            DeletingData()
         else:
             print("Pick a vaild option! ")
         print("Do you want this to end? ")
