@@ -66,6 +66,8 @@ def Conditioning_Data():
 
 def MakingWherePartOfTheStatment():
     Finished = False
+    Field_Questions = ["What's the movie name?","When was it released?","What type of genre is it?","What rating is it out of 10?"]
+    Field_Display = ["Movie Name","Date released","Genre","Rating"]
     Conditions_Dictionary = {}
     while Finished == False:
         print("--------------------------------------")
@@ -78,9 +80,9 @@ def MakingWherePartOfTheStatment():
         Condition_field = int(input("Choice: ")) - 1
         if Condition_field not in Conditions_Dictionary and 0 <= Condition_field <= 3:
             print("--------------------------")
-            print("What is the condition? ")
+            print(Field_Questions[Condition_field])
             print("--------------------------")
-            Condition_Value = input("Condition: ")
+            Condition_Value = input(f"{Field_Display[Condition_field]}: ")
             Conditions_Dictionary[Condition_field] = Condition_Value
             '''Adding the index value of the field name in Field_Names = ["Movie_Name","release_Date","genre","rating"] 
             with its correspding conditionm like 1:"29/10/21". The 1 is coresponds to the string 'release_Date' in the Field_Names list and the "29/10/21" is the condition or
@@ -159,6 +161,7 @@ def Decision():
         print("2.Adding Data")
         print("3.Updating Data")
         print("4.Deleting Data")
+        print("5.Exit")
         print("----------------------")
         Decision = int(input("Choice: "))
         if Decision == 1:
@@ -169,15 +172,13 @@ def Decision():
             Updating()
         elif Decision == 4:
             DeletingData()
+        elif Decision == 5:
+            stop = True
+            print("----------------------")
+            print("See you next time!")
+            print("----------------------")
         else:
             print("---------------------------------------")
             print("Pick a vaild option next time! ")
             print("---------------------------------------")
-        print("-------------------------------------------")
-        print("Do you want this to end? (yes or no) ")
-        print("-------------------------------------------")
-        Answer = input()
-        if Answer.title() == "Yes":
-            stop = True
-
 Decision()
